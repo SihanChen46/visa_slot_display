@@ -10,11 +10,10 @@ while true; do
   python3 parse_daily_update.py
 
   # 添加更改的文件
-  git add data/new_slots_hourly.json
-  git add data/new_slots_dayly.json
+  git add data
 
   # 提交更改
-  git commit -m "自动更新 new_slots_hourly.json"
+  git commit -m "自动更新 data.json"
 
   # 推送到远程仓库
   git push origin main
