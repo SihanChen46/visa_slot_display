@@ -2,19 +2,34 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>过去72小时新增位置和天级别数据</title>
+  <title>巴巴多斯美签预约实时爬取数据</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .content {
+      display: flex;
       flex-direction: row;
       justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
     }
     .column {
       width: 48%;
     }
     h1 {
       text-align: center;
+      font-size: 24px;
+      margin-bottom: 10px;
     }
     .entry {
       margin-bottom: 20px;
@@ -26,6 +41,10 @@
     .month {
       font-weight: bold;
       margin-top: 10px;
+    }
+    .months-list {
+      list-style-type: disc;
+      margin-left: 20px;
     }
     .dates {
       display: flex;
@@ -40,13 +59,16 @@
   </style>
 </head>
 <body>
-  <div class="column">
-    <h1>过去72小时新增位置</h1>
-    <div id="hourly-data">加载中...</div>
-  </div>
-  <div class="column">
-    <h1>天级别新增位置</h1>
-    <div id="daily-data">加载中...</div>
+  <h1 class="title">巴巴多斯H1B美签预约实时爬取数据（美国东部时间）</h1>
+  <div class="content">
+    <div class="column">
+      <h1>每小时新增位置（过去72小时）</h1>
+      <div id="hourly-data">加载中...</div>
+    </div>
+    <div class="column">
+      <h1>过去7天成果</h1>
+      <div id="daily-data">加载中...</div>
+    </div>
   </div>
 
   <script>
@@ -71,15 +93,16 @@
           const formattedHour = dateObj.toLocaleString('zh-CN', { hour12: false });
 
           const hourTitle = document.createElement('h2');
-          hourTitle.textContent = `时间：${formattedHour}`;
+          hourTitle.textContent = `监控时间：${formattedHour}`;
           entryDiv.appendChild(hourTitle);
 
           if (item.new_dates && item.new_dates.length > 0) {
-            const dateList = document.createElement('ul');
+            const dateList = document.createElement('div');
             dateList.className = 'dates';
 
             item.new_dates.forEach(dateStr => {
-              const dateItem = document.createElement('li');
+              const dateItem = document.createElement('div');
+              dateItem.className = 'date-item';
               dateItem.textContent = dateStr;
               dateList.appendChild(dateItem);
             });
@@ -117,7 +140,7 @@
 
           // 显示天级别日期
           const dayTitle = document.createElement('h2');
-          dayTitle.textContent = `日期：${item.day}`;
+          dayTitle.textContent = `监控日期：${item.day}`;
           entryDiv.appendChild(dayTitle);
 
           // 按月份分组
@@ -131,12 +154,14 @@
             monthGroups[monthKey].push(dateStr);
           });
 
-          // 渲染每个月份的日期
+          // 渲染每个月份的日期作为list items
+          const monthsList = document.createElement('ul');
+          monthsList.className = 'months-list';
+
           for (const [month, dates] of Object.entries(monthGroups).sort()) {
-            const monthTitle = document.createElement('div');
-            monthTitle.className = 'month';
-            monthTitle.textContent = `${month}：`;
-            entryDiv.appendChild(monthTitle);
+            const monthItem = document.createElement('li');
+            monthItem.className = 'month';
+            monthItem.textContent = `${month}：`;
 
             const dateList = document.createElement('div');
             dateList.className = 'dates';
@@ -147,9 +172,11 @@
               dateList.appendChild(dateItem);
             });
 
-            entryDiv.appendChild(dateList);
+            monthItem.appendChild(dateList);
+            monthsList.appendChild(monthItem);
           }
 
+          entryDiv.appendChild(monthsList);
           container.appendChild(entryDiv);
         });
       })

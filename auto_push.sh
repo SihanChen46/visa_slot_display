@@ -6,7 +6,8 @@ while true; do
   echo "运行任务时间: $(date)"
 
   # 运行您的 Python 脚本
-  python3 parse_hour_update.py
+  python3 parse_hourly_update.py
+  python3 parse_daily_update.py
 
   # 添加更改的文件
   git add data/new_slots_hourly.json
