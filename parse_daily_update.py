@@ -48,7 +48,7 @@ def parse_log_file_daily(file_path):
             sorted_months[month] = sorted(log_dates[log_date][month])  # Sort dates within each month
         sorted_log_dates[log_date] = sorted_months
 
-    # Write results to a JSON file
+    # Write results to a JSON file with the original key-based structure
     with open("./data/new_slots_daily.json", "w", encoding='utf-8') as json_file:
         json.dump(sorted_log_dates, json_file, ensure_ascii=False, indent=4)
 

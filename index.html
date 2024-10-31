@@ -122,68 +122,62 @@
         document.getElementById('hourly-data').innerText = '数据加载失败。';
       });
 
-    // 获取并处理天级别数据
-    fetch('https://sihanchen46.github.io/visa_slot_display/data/new_slots_daily.json')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('daily-data');
-        container.innerHTML = ''; // 清空加载中提示
+  // 获取并处理天级别数据
+  fetch('https://sihanchen46.github.io/visa_slot_display/data/new_slots_daily.json')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('daily-data');
+      container.innerHTML = ''; // 清空加载中提示
 
-        if (data.length === 0) {
-          container.innerText = '暂无数据。';
-          return;
-        }
+      if (Object.keys(data).length === 0) {
+        container.innerText = '暂无数据。';
+        return;
+      }
 
-        data.forEach(item => {
-          const entryDiv = document.createElement('div');
-          entryDiv.className = 'entry';
+      // 遍历每个监控日期
+      Object.keys(data).sort().reverse().forEach(day => {
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'entry';
 
-          // 显示天级别日期
-          const dayTitle = document.createElement('h2');
-          dayTitle.textContent = `监控日期：${item.day}`;
-          entryDiv.appendChild(dayTitle);
+        // 显示天级别日期
+        const dayTitle = document.createElement('h2');
+        dayTitle.textContent = `监控日期：${day}`;
+        entryDiv.appendChild(dayTitle);
 
-          // 按月份分组
-          const monthGroups = {};
-          item.new_dates.forEach(dateStr => {
-            const dateObj = new Date(dateStr);
-            const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
-            if (!monthGroups[monthKey]) {
-              monthGroups[monthKey] = [];
-            }
-            monthGroups[monthKey].push(dateStr);
+        // 获取每个监控日期中的月份和日期
+        const monthGroups = data[day];
+        const monthsList = document.createElement('ul');
+        monthsList.className = 'months-list';
+
+        // 遍历月份并展示日期
+        Object.keys(monthGroups).sort().forEach(month => {
+          const monthItem = document.createElement('li');
+          monthItem.className = 'month';
+          monthItem.textContent = `${month}：`;
+
+          const dateList = document.createElement('div');
+          dateList.className = 'dates';
+
+          // 遍历每个月份中的日期并展示
+          monthGroups[month].forEach(dateStr => {
+            const dateItem = document.createElement('div');
+            dateItem.className = 'date-item';
+            dateItem.textContent = dateStr;
+            dateList.appendChild(dateItem);
           });
 
-          // 渲染每个月份的日期作为list items
-          const monthsList = document.createElement('ul');
-          monthsList.className = 'months-list';
-
-          for (const [month, dates] of Object.entries(monthGroups).sort()) {
-            const monthItem = document.createElement('li');
-            monthItem.className = 'month';
-            monthItem.textContent = `${month}：`;
-
-            const dateList = document.createElement('div');
-            dateList.className = 'dates';
-            dates.forEach(dateStr => {
-              const dateItem = document.createElement('div');
-              dateItem.className = 'date-item';
-              dateItem.textContent = dateStr;
-              dateList.appendChild(dateItem);
-            });
-
-            monthItem.appendChild(dateList);
-            monthsList.appendChild(monthItem);
-          }
-
-          entryDiv.appendChild(monthsList);
-          container.appendChild(entryDiv);
+          monthItem.appendChild(dateList);
+          monthsList.appendChild(monthItem);
         });
-      })
-      .catch(error => {
-        console.error('获取数据失败：', error);
-        document.getElementById('daily-data').innerText = '数据加载失败。';
+
+        entryDiv.appendChild(monthsList);
+        container.appendChild(entryDiv);
       });
+    })
+    .catch(error => {
+      console.error('获取数据失败：', error);
+      document.getElementById('daily-data').innerText = '数据加载失败。';
+    });
   </script>
 </body>
 </html>
