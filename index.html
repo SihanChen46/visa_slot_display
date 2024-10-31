@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>数据展示</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .entry {
+      margin-bottom: 20px;
+    }
+    .entry h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .dates {
+      list-style-type: disc;
+      margin-left: 20px;
+    }
+    .dates li {
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>数据展示</h1>
+  <div id="data">加载中...</div>
+
+  <script>
+    // 获取并处理数据
+    fetch('new_slots_hourly.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('data');
+        container.innerHTML = ''; // 清空加载中提示
+
+        if (data.length === 0) {
+          container.innerText = '暂无数据。';
+          return;
+        }
+
+        data.forEach(item => {
+          const entryDiv = document.createElement('div');
+          entryDiv.className = 'entry';
+
+          // 格式化时间
+          const dateObj = new Date(item.hour);
+          const formattedHour = dateObj.toLocaleString('zh-CN', { hour12: false });
+
+          const hourTitle = document.createElement('h2');
+          hourTitle.textContent = `时间：${formattedHour}`;
+          entryDiv.appendChild(hourTitle);
+
+          if (item.new_dates && item.new_dates.length > 0) {
+            const dateList = document.createElement('ul');
+            dateList.className = 'dates';
+
+            item.new_dates.forEach(dateStr => {
+              const dateItem = document.createElement('li');
+              dateItem.textContent = dateStr;
+              dateList.appendChild(dateItem);
+            });
+
+            entryDiv.appendChild(dateList);
+          } else {
+            const noData = document.createElement('p');
+            noData.textContent = '无新增日期';
+            entryDiv.appendChild(noData);
+          }
+
+          container.appendChild(entryDiv);
+        });
+      })
+      .catch(error => {
+        console.error('获取数据失败：', error);
+        document.getElementById('data').innerText = '数据加载失败。';
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+python3 scrape/scrape_with_fee.py
