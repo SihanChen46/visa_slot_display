@@ -42,7 +42,7 @@ def parse_log_file_daily(file_path):
 
     # Sort dates within each month and sort months for each log date
     sorted_log_dates = {}
-    for log_date in sorted(log_dates.keys()):  # Sort log dates
+    for log_date in sorted(log_dates.keys(), reverse=True):  # Sort log dates in descending order
         sorted_months = {}
         for month in sorted(log_dates[log_date].keys()):  # Sort months
             sorted_months[month] = sorted(log_dates[log_date][month])  # Sort dates within each month

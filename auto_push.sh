@@ -11,6 +11,7 @@ while true; do
 
   # 添加更改的文件
   git add data/new_slots_hourly.json
+  git add data/new_slots_dayly.json
 
   # 提交更改
   git commit -m "自动更新 new_slots_hourly.json"

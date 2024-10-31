@@ -13,7 +13,7 @@ def parse_log_file(file_path):
 
     # Define the time window for the last 24 hours
     now = datetime.now()
-    time_window_start = now - timedelta(hours=24)
+    time_window_start = now - timedelta(hours=72)
 
     # Dictionary to store dates found within each hour
     hourly_dates = defaultdict(set)
@@ -38,7 +38,7 @@ def parse_log_file(file_path):
                 hourly_dates[hour].update(dates)
 
     # Sort the hours and find unique dates for each hour
-    sorted_hours = sorted(hourly_dates.keys())
+    sorted_hours = sorted(hourly_dates.keys(), reverse=True)
     for i in range(1, len(sorted_hours)):
         current_hour = sorted_hours[i]
         previous_hour = sorted_hours[i - 1]
