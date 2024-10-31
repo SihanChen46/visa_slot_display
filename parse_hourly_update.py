@@ -13,7 +13,7 @@ def parse_log_file(file_path):
 
     # Define the time window for the last 24 hours
     now = datetime.now()
-    time_window_start = now - timedelta(hours=72)
+    time_window_start = now - timedelta(hours=24)
 
     # Dictionary to store dates found within each hour
     hourly_dates = defaultdict(set)
