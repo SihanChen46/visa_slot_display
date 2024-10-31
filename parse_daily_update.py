@@ -11,9 +11,9 @@ def parse_log_file_daily(file_path):
     date_pattern = re.compile(r"\['(.*?)'\]")
     timestamp_pattern = re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")
 
-    # Define the time window for the last 7 days
+    # Define the time window for the last 1 days
     now = datetime.now()
-    time_window_start = now - timedelta(days=7)
+    time_window_start = now - timedelta(days=1)
 
     # Dictionary to store dates grouped by log date and then by month
     log_dates = defaultdict(lambda: defaultdict(set))  # Use set to ensure unique dates
