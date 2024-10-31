@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import Select
 import time
 import logging
 from datetime import datetime
+import yaml
 
 # 创建日志记录器
 logger = logging.getLogger('appointment_logger')
@@ -29,8 +30,10 @@ chrome_driver_path = './chromedriver-mac-x64/chromedriver'  # 替换为你的 Ch
 url = 'https://ais.usvisa-info.com/en-bb/niv/schedule/63315832/appointment'  # 替换为你页面的实际 URL
 
 # 登录信息
-email = "sihanchen46@gmail.com"
-password = "Chen+961226"
+with open('config.yaml', 'r') as file:
+    conf = yaml.safe_load(file)
+email = conf['email']
+password = conf['password']
 
 # 新增：标记是否已经预约成功
 appointment_scheduled = False
