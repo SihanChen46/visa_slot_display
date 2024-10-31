@@ -1,4 +1,4 @@
 chromedriver-mac-x64
 config.yaml
 scrape
-appointment_log.json
+data/appointment_log.txt
