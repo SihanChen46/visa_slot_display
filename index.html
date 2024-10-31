@@ -23,12 +23,19 @@
       font-size: 18px;
       margin-bottom: 5px;
     }
-    .dates {
-      list-style-type: disc;
-      margin-left: 20px;
+    .month {
+      font-weight: bold;
+      margin-top: 10px;
     }
-    .dates li {
-      margin-bottom: 3px;
+    .dates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .date-item {
+      padding: 2px 8px;
+      background-color: #f2f2f2;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -38,7 +45,7 @@
     <div id="hourly-data">加载中...</div>
   </div>
   <div class="column">
-    <h1>过去7天新增位置</h1>
+    <h1>天级别新增位置</h1>
     <div id="daily-data">加载中...</div>
   </div>
 
@@ -113,21 +120,34 @@
           dayTitle.textContent = `日期：${item.day}`;
           entryDiv.appendChild(dayTitle);
 
-          if (item.new_dates && item.new_dates.length > 0) {
-            const dateList = document.createElement('ul');
-            dateList.className = 'dates';
+          // 按月份分组
+          const monthGroups = {};
+          item.new_dates.forEach(dateStr => {
+            const dateObj = new Date(dateStr);
+            const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+            if (!monthGroups[monthKey]) {
+              monthGroups[monthKey] = [];
+            }
+            monthGroups[monthKey].push(dateStr);
+          });
 
-            item.new_dates.forEach(dateStr => {
-              const dateItem = document.createElement('li');
+          // 渲染每个月份的日期
+          for (const [month, dates] of Object.entries(monthGroups).sort()) {
+            const monthTitle = document.createElement('div');
+            monthTitle.className = 'month';
+            monthTitle.textContent = `${month}：`;
+            entryDiv.appendChild(monthTitle);
+
+            const dateList = document.createElement('div');
+            dateList.className = 'dates';
+            dates.forEach(dateStr => {
+              const dateItem = document.createElement('div');
+              dateItem.className = 'date-item';
               dateItem.textContent = dateStr;
               dateList.appendChild(dateItem);
             });
 
             entryDiv.appendChild(dateList);
-          } else {
-            const noData = document.createElement('p');
-            noData.textContent = '无新增日期';
-            entryDiv.appendChild(noData);
           }
 
           container.appendChild(entryDiv);
