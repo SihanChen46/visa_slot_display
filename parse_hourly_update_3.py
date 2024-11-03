@@ -36,21 +36,18 @@ def parse_log_file(file_path):
             if date_match:
                 dates = set(date_match.group(1).split("', '"))
                 hourly_dates[hour].update(dates)
-    print(hourly_dates)
 
     # Sort the hours and find unique dates for each hour
     sorted_hours = sorted(hourly_dates.keys(), reverse=True)
-    for i in range(0, len(sorted_hours) - 1):
+    for i in range(1, len(sorted_hours)):
         current_hour = sorted_hours[i]
-        previous_hour = sorted_hours[i + 1]
+        previous_hour = sorted_hours[i - 1]
 
         if current_hour >= now.replace(minute=0, second=0, microsecond=0):
             continue  # Skip the latest, unfinished hour
 
         # Calculate the difference between the current hour's dates and the previous hour's dates
         new_dates = hourly_dates[current_hour] - hourly_dates[previous_hour]
-        print(current_hour, previous_hour)
-        print(new_dates)
         if new_dates:
             results.append({
                 "hour": current_hour.strftime("%Y-%m-%d %H:%M:%S"),
