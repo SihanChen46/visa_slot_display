@@ -1,5 +1,5 @@
 chromedriver-mac-x64
 config.yaml
-scrape
+# scrape
 data/appointment_log.txt
 .DS_Store
